@@ -6,7 +6,7 @@
 /*   By: ppoinsin <ppoinsin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 14:06:08 by ppoinsin          #+#    #+#             */
-/*   Updated: 2021/04/05 19:26:45 by ppoinsin         ###   ########.fr       */
+/*   Updated: 2021/04/05 20:17:48 by ppoinsin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,15 @@ int					ft_cd(char **cmd)
 
 	if (!cmd[1])
 	{
-		if ((tmp = get_env_var_two("HOME")))
-			if ((tmp = ft_strchr(tmp, '=')))
-				tmp = tmp + 1;
-		return (chdir(get_env_var_two("HOME")) == -1 ? ft_printf("cd: %s\n",
+		if ((tmp = get_env_var_two("HOME")) && (tmp = ft_strchr(tmp, '=')))
+			tmp = tmp + 1;
+		return (chdir(tmp) == -1 ? ft_printf("cd: %s\n",
 					strerror(errno)) : 0);
 	}
 	else if (cmd[2])
 		return (ft_printf("cd: syntax error\n"));
 	else if (!ft_strcmp(cmd[1], "-"))
-	{
-		if (ft_cd_previous(cmd))
-			return (1);
-		return (printf("%s\n", cmd[1]));
-	}
+		return (ft_cd_previous(cmd) ? 1 : printf("%s\n", cmd[1]));
 	else if (!ft_strcmp(cmd[1], "~"))
 	{
 		free(cmd[1]);
